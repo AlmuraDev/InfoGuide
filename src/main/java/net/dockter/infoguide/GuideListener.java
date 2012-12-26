@@ -9,30 +9,39 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.getspout.spoutapi.event.input.KeyPressedEvent;
+import org.getspout.spoutapi.event.spout.SpoutCraftEnableEvent;
 import org.getspout.spoutapi.keyboard.Keyboard;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class GuideListener implements Listener {
 
 	private Main instance;
-
+	
+	public static int taskId = 0;
+			
 	public GuideListener(Main aThis) {
 		instance = aThis;
 	}
 
+	
 	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent event) {
+	public void onSpoutCraftEnable(SpoutCraftEnableEvent event) {
+		System.out.println("onSpoutCraft Seen");
 		if (Main.getInstance().getConfig().getBoolean("DisplayOnLogin", true)) {
-			if (!(event.getPlayer().hasPermission("infoguide.bypassall"))) {
+			System.out.println("onSpoutCraft Step2");
+			if (!(event.getPlayer().hasPermission("infoguide.bypassall"))) {  //OP's have this.
+				System.out.println("onSpoutCraft Step3");
 				if (!(event.getPlayer().hasPermission("infoguide.bypass"))
 						&& !instance.isBypassing(event.getPlayer().getName())) {
-					final SpoutPlayer splr = (SpoutPlayer) event.getPlayer();
-						Bukkit.getScheduler().scheduleSyncDelayedTask(instance,
+					final SpoutPlayer splr = (SpoutPlayer) event.getPlayer();						
+					taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(instance,
 							new Runnable() {
-								public void run() {
-									openInfoGuide(splr);
-								}
-							}, 20L);
+						public void run() {									
+							if (splr.isPreCachingComplete()) {								
+								openInfoGuide(splr);
+							}							
+						}
+					}, 20L, 20L);
 				}
 			}
 		}
@@ -46,6 +55,7 @@ public class GuideListener implements Listener {
 	
 	public static void openInfoGuide(SpoutPlayer player) {
 		GuideManager.load();
+		Bukkit.getScheduler().cancelTask(taskId);		
 		player.getMainScreen().attachPopupScreen(new GUIGuide(player));
 	}
 }
