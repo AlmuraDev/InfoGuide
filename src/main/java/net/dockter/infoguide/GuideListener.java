@@ -25,12 +25,9 @@ public class GuideListener implements Listener {
 
 	
 	@EventHandler
-	public void onSpoutCraftEnable(SpoutCraftEnableEvent event) {
-		System.out.println("onSpoutCraft Seen");
-		if (Main.getInstance().getConfig().getBoolean("DisplayOnLogin", true)) {
-			System.out.println("onSpoutCraft Step2");
-			if (!(event.getPlayer().hasPermission("infoguide.bypassall"))) {  //OP's have this.
-				System.out.println("onSpoutCraft Step3");
+	public void onSpoutCraftEnable(SpoutCraftEnableEvent event) {		
+		if (Main.getInstance().getConfig().getBoolean("DisplayOnLogin", true)) {			
+			if (!(event.getPlayer().hasPermission("infoguide.bypassall"))) {  //OP's have this.				
 				if (!(event.getPlayer().hasPermission("infoguide.bypass"))
 						&& !instance.isBypassing(event.getPlayer().getName())) {
 					final SpoutPlayer splr = (SpoutPlayer) event.getPlayer();						
