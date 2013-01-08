@@ -1,5 +1,8 @@
 package net.dockter.infoguide;
 
+import java.util.HashMap;
+import java.util.UUID;
+
 import net.dockter.infoguide.gui.GUIGuide;
 import net.dockter.infoguide.guide.GuideManager;
 import org.bukkit.Bukkit;
@@ -16,8 +19,8 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 public class GuideListener implements Listener {
 
 	private Main instance;
-	
-	public static int taskId = 0;
+
+	public static HashMap<UUID, Integer> PLAYERS = new HashMap<UUID, Integer>();
 			
 	public GuideListener(Main aThis) {
 		instance = aThis;
@@ -30,15 +33,14 @@ public class GuideListener implements Listener {
 			if (!(event.getPlayer().hasPermission("infoguide.bypassall"))) {  //OP's have this.				
 				if (!(event.getPlayer().hasPermission("infoguide.bypass"))
 						&& !instance.isBypassing(event.getPlayer().getName())) {
-					final SpoutPlayer splr = (SpoutPlayer) event.getPlayer();						
-					taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(instance,
-							new Runnable() {
+					final SpoutPlayer splr = event.getPlayer();
+					PLAYERS.put(splr.getUniqueId(), Bukkit.getScheduler().scheduleSyncRepeatingTask(instance, new Runnable() {
 						public void run() {									
 							if (splr.isPreCachingComplete()) {								
 								openInfoGuide(splr);
 							}							
 						}
-					}, 20L, 20L);
+					}, 20L, 20L));
 				}
 			}
 		}
@@ -52,7 +54,9 @@ public class GuideListener implements Listener {
 	
 	public static void openInfoGuide(SpoutPlayer player) {
 		GuideManager.load();
-		Bukkit.getScheduler().cancelTask(taskId);		
+		if (PLAYERS.containsKey(player.getUniqueId())) {
+			Bukkit.getScheduler().cancelTask(PLAYERS.get(player.getUniqueId()));
+		}
 		player.getMainScreen().attachPopupScreen(new GUIGuide(player));
 	}
 }
