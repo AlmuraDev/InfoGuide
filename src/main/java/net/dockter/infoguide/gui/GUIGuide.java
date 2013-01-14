@@ -54,14 +54,16 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 public class GUIGuide extends GenericPopup {
 
 	final GenericTextField guideField, guideInvisible;
-	final GenericLabel guideName, guideDate, pagelabel;
+	final GenericLabel guideName, guideDate, pagelabel, pagetext;
 	final public static HashMap<Player, Guide> map = new HashMap<Player, Guide>();
 	public int pageno = 1;
-	final GenericButton close, newb, saveb, deleteb, pd, pu;
+	final GenericButton close, newb, saveb, deleteb, pd, pu, editb, deletepb;
 	final ComboBox box;
 	final CheckBox checkBox;
 	private final SpoutPlayer player;
 	public final Logger log = Logger.getLogger("Minecraft");
+	private static Color redText = new Color(0.69f,0.09f,0.12f,1f);
+	private static Color whiteText = new Color(1f,1f,1f,1f);
 
 	public GUIGuide(SpoutPlayer player) {
 		super();
@@ -76,13 +78,13 @@ public class GUIGuide extends GenericPopup {
 		guideName = new GenericLabel("TheGuideNameHere");
 		guideName.setWidth(-1).setHeight(-1);
 		guideName.setAnchor(WidgetAnchor.CENTER_CENTER);
-		guideName.shiftXPos(-200).shiftYPos(-105);
+		guideName.shiftXPos(-200).shiftYPos(-100);
 		guideName.setScale(1.3F);
 
 		guideInvisible = new GenericTextField();
-		guideInvisible.setWidth(150).setHeight(18);
+		guideInvisible.setWidth(150).setHeight(16);
 		guideInvisible.setAnchor(WidgetAnchor.CENTER_CENTER);
-		guideInvisible.shiftXPos(-200).shiftYPos(-110);
+		guideInvisible.shiftXPos(-200).shiftYPos(-102);
 		guideInvisible.setMaximumCharacters(30);
 		guideInvisible.setMaximumLines(1);
 		guideInvisible.setVisible(false);
@@ -93,12 +95,12 @@ public class GUIGuide extends GenericPopup {
 		guideDate.shiftXPos(-200).shiftYPos(90);
 
 		box = new MyCombo(this);
-		box.setText("Guides - Click Here");
+		box.setText("Guides");
 		box.setAnchor(WidgetAnchor.CENTER_CENTER);
 		box.setWidth(GenericLabel.getStringWidth("12345678901234567890123459"));
 		box.setHeight(18);
-		box.shiftXPos(25).shiftYPos(-110);
-		box.setAuto(true);
+		box.shiftXPos(25).shiftYPos(-105);
+		box.setAuto(true);		
 		box.setPriority(RenderPriority.Low);
 		refreshItems();
 
@@ -112,23 +114,24 @@ public class GUIGuide extends GenericPopup {
 		guideField.setText("first guide goes here"); // The default text
 		guideField.setAnchor(WidgetAnchor.CENTER_CENTER);
 		guideField.setBorderColor(new Color(1.0F, 1.0F, 1.0F, 1.0F)); // White border
-		guideField.setMaximumCharacters(1000);
+		guideField.setMaximumCharacters(1200);
 		guideField.setMaximumLines(13);
 		guideField.setHeight(160).setWidth(377);
 		guideField.shiftXPos(-195).shiftYPos(-83);
 		guideField.setMargin(0);
+		guideField.setFocus(true);
 
 		close = new CloseButton(this);
 		close.setAuto(true);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setHeight(18).setWidth(40);
-		close.shiftXPos(142).shiftYPos(87);
+		close.shiftXPos(142).shiftYPos(85);  // New Y
 
 		pu = new PageUpButton(this);
 		pu.setAuto(true).setText("<<<");
 		pu.setAnchor(WidgetAnchor.CENTER_CENTER);
 		pu.setHeight(18).setWidth(40);
-		pu.shiftXPos(17).shiftYPos(87);
+		pu.shiftXPos(17).shiftYPos(85);
 
 		pagelabel = new GenericLabel();
 		pagelabel.setText(Integer.toString(pageno));
@@ -136,18 +139,26 @@ public class GUIGuide extends GenericPopup {
 		pagelabel.shiftXPos(66).shiftYPos(92);
 		pagelabel.setPriority(RenderPriority.Normal);
 		pagelabel.setWidth(5).setHeight(18);
+		
+		pagetext = new GenericLabel();
+		pagetext.setText("Page");
+		pagetext.setAnchor(WidgetAnchor.CENTER_CENTER);
+		pagetext.shiftXPos(62).shiftYPos(85);
+		pagetext.setPriority(RenderPriority.Normal);
+		pagetext.setWidth(5).setHeight(18);
+		pagetext.setScale(0.6F);
 
 		pd = new PageDownButton(this);
 		pd.setAuto(true).setText(">>>");
 		pd.setAnchor(WidgetAnchor.CENTER_CENTER);
 		pd.setHeight(18).setWidth(40);
-		pd.shiftXPos(82).shiftYPos(87);
+		pd.shiftXPos(82).shiftYPos(85);
 
 		checkBox = new BypassCheckBox(player, this);
 		checkBox.setText("Bypass");
 		checkBox.setAnchor(WidgetAnchor.CENTER_CENTER);
 		checkBox.setHeight(20).setWidth(19);
-		checkBox.shiftXPos(-52).shiftYPos(87);
+		checkBox.shiftXPos(-52).shiftYPos(83);
 		checkBox.setAuto(true);
 
 		this.setTransparent(true);
@@ -157,6 +168,7 @@ public class GUIGuide extends GenericPopup {
 		attachWidget(Main.getInstance(), close);
 		attachWidget(Main.getInstance(), pu);
 		attachWidget(Main.getInstance(), pagelabel);
+		attachWidget(Main.getInstance(), pagetext);
 		attachWidget(Main.getInstance(), pd);
 		attachWidget(Main.getInstance(), guideName);
 		attachWidget(Main.getInstance(), guideInvisible);
@@ -169,7 +181,7 @@ public class GUIGuide extends GenericPopup {
 		if (player.hasPermission("infoguide.edit") || player.hasPermission("infoguide.admin")) {
 			saveb = new SaveButton(this);
 			saveb.setAnchor(WidgetAnchor.CENTER_CENTER);
-			saveb.setAuto(true).setHeight(18).setWidth(40).shiftXPos(-145).shiftYPos(87);
+			saveb.setAuto(true).setHeight(18).setWidth(40).shiftXPos(-195).shiftYPos(85);
 			attachWidget(Main.getInstance(), saveb);
 		} else {
 			saveb = null;
@@ -177,25 +189,41 @@ public class GUIGuide extends GenericPopup {
 
 		if (player.hasPermission("infoguide.create") || player.hasPermission("infoguide.edit") || player.hasPermission("infoguide.admin")) {
 			guideDate.setVisible(false);
-			newb = new NewButton(this);
-			newb.setAuto(true);
+			newb = new NewButton(this);			
 			newb.setAnchor(WidgetAnchor.CENTER_CENTER);
-			newb.setAuto(true).setHeight(18).setWidth(40).shiftXPos(-190).shiftYPos(87);
+			newb.setAuto(true).setHeight(13).setWidth(35).shiftXPos(-200).shiftYPos(-120);
 			attachWidget(Main.getInstance(), newb);
 		} else {
 			newb = null;
 			guideDate.setVisible(true);
 		}
 
+		if (player.hasPermission("infoguide.edit") || player.hasPermission("infoguide.admin")) {
+			editb = new EditButton(this);			
+			editb.setAnchor(WidgetAnchor.CENTER_CENTER);
+			editb.setAuto(true).setHeight(13).setWidth(55).shiftXPos(-162).shiftYPos(-120);			
+			attachWidget(Main.getInstance(), editb);
+		} else {
+			editb = null;
+		}
+		
 		if (player.hasPermission("infoguide.delete") || player.hasPermission("infoguide.admin")) {
-			deleteb = new DeleteButton(this);
+			deleteb = new DeleteButton(this);			
 			deleteb.setAnchor(WidgetAnchor.CENTER_CENTER);
-			deleteb.setAuto(true).setHeight(18).setWidth(40).shiftXPos(-100).shiftYPos(87);
+			deleteb.setAuto(true).setHeight(13).setWidth(45).shiftXPos(-103).shiftYPos(-120);		
+			
+			deletepb = new DeletePageButton(this);
+			deletepb.setAnchor(WidgetAnchor.CENTER_CENTER);
+			deletepb.setAuto(true).setHeight(18).setWidth(70).shiftXPos(-140).shiftYPos(85);
+			deletepb.setVisible(false);
+			
 			attachWidget(Main.getInstance(), deleteb);
+			attachWidget(Main.getInstance(), deletepb);
 		} else {
 			deleteb = null;
+			deletepb = null;
 		}
-
+		
 		if (player.hasPermission("infoguide.moderatorguide")) {
 			setGuide(GuideManager.getLoadedGuides().get(Main.getInstance().getConfig().getString("ModeratorGuide")));
 			return;
@@ -215,57 +243,119 @@ public class GUIGuide extends GenericPopup {
 	private Guide guide;
 
 	public void setGuide(Guide guide) {
+		buttonResets();
 		if (guide == null) {
 			return;
 		}
 		this.guide = guide;
 		guideDate.setText("Updated: " + guide.getDate());
 		guideName.setText(guide.getName()).setWidth(-1);
+		guideInvisible.setText(guide.getName());
 		map.put(player, guide);
 		pageno = 1;
 		pagelabel.setText(Integer.toString(pageno));
 		guideField.setText(guide.getPage(1));
-		if (pageno == guide.getPages() && player.hasPermission("infoguide.edit")) {
-			pd.setText("+");
-			pd.setDirty(true);
+		guideField.setFocus(true);
+		pd.setVisible(true);		
+		if (pageno == 1) {
+			pu.setVisible(false);		
 		}
+		if (pageno == guide.getPages()) {
+			if (player.hasPermission("infoguide.edit") || player.hasPermission("infoguide.admin")) {
+				pd.setText("+");
+				pd.setDirty(true);
+				pagelabel.setVisible(true);
+				pagetext.setVisible(true);
+			} else {
+			
+			pd.setVisible(false);
+			pd.setDirty(true);
+			pagelabel.setVisible(false);
+			pagetext.setVisible(false);
+			}
+		} else {
+			pd.setText(">>>");
+			pd.setVisible(true);
+			pd.setDirty(true);
+			pagelabel.setVisible(true);
+			pagetext.setVisible(true);
+		}		
 	}
 
 	public void pageUp() {
+		buttonResets();
 		pageno = pageno - 1;
 		if (pageno == 0) {
 			pageno = 1;
 		}
-		Guide gguide = map.get(player);
-		if (pageno == gguide.getPages() - 1) {
-			pd.setText(">>>");
-			pd.setDirty(true);
+		if (pageno == 1) {
+			pu.setVisible(false);
+			if (player.hasPermission("infoguide.edit") || player.hasPermission("infoguide.admin")) {
+				deletepb.setVisible(false);
+			}
+		} else {
+			pu.setVisible(true);			
 		}
-		
+		Guide gguide = map.get(player);
+		if (pageno != gguide.getPages()) {
+			pd.setText(">>>");
+			pd.setVisible(true);			
+		} else {
+			if (player.hasPermission("infoguide.edit") || player.hasPermission("infoguide.admin")) {				
+				pd.setText("+");
+				pd.setVisible(true);
+				pd.setDirty(true);
+				if (pageno == 1) {
+					deletepb.setVisible(false);
+					deletepb.setDirty(true);
+				} else {
+					deletepb.setVisible(true);
+					deletepb.setDirty(true);
+				}
+			}
+		}
+		pd.setDirty(true);
 		guideField.setText(gguide.getPage(pageno));
 		pagelabel.setText(Integer.toString(pageno));
+		guideField.setFocus(true);
 	}
 
 	public void pageDown() {
+		buttonResets();
 		pageno++;
 		Guide gguide = map.get(player);
-		if (pageno == gguide.getPages() + 1) {
+		if (pd.getText().equalsIgnoreCase("+")) {			
 			if (player.hasPermission("infoguide.edit") || player.hasPermission("infoguide.admin")) {
-				gguide.addPage();
+				gguide.addPage();				
 				pd.setText(">>>");
+				pd.setVisible(false);
 			}
-			pd.setDirty(true);
-			pageno--;
+			pd.setDirty(true);			
 		}
-		if (pageno == gguide.getPages() && (player.hasPermission("infoguide.edit") || player.hasPermission("infoguide.admin"))) {
-			pd.setText("+");
+		if (pageno == guide.getPages()) {
+			if (player.hasPermission("infoguide.edit") || player.hasPermission("infoguide.admin")) {
+				pd.setText("+");
+				pd.setDirty(true);
+				deletepb.setVisible(true);
+				deletepb.setDirty(true);
+			} else {
+			pd.setVisible(false);
 			pd.setDirty(true);
+			}
+		} else {
+			pd.setText(">>>");
+			pd.setVisible(true);
+			pd.setDirty(true);			
 		}
+		pu.setVisible(true);
+		pu.setDirty(true);
 		guideField.setText(gguide.getPage(pageno));
 		pagelabel.setText(Integer.toString(pageno));
+		guideField.setFocus(true);
 	}
 
 	public void onNewClick() {
+		buttonResets();
 		setGuide(new Guide("", "", new ArrayList<String>()));
 		guideName.setVisible(false);
 		guideInvisible.setVisible(true);
@@ -273,7 +363,7 @@ public class GUIGuide extends GenericPopup {
 	}
 
 	void onSaveClick(String playerName) {
-
+		buttonResets();
 		Guide gguide = map.get(player);
 				
 		gguide.setPage(pageno, guideField.getText());
@@ -298,12 +388,33 @@ public class GUIGuide extends GenericPopup {
 	}
 
 	void onDeleteClick() {
-		if (box.getItems().size() == 1) {
-			return;
+		if (deleteb.getText().equalsIgnoreCase("delete")) {
+			deleteb.setText("Confirm?");
+			deleteb.setColor(redText);
+			deleteb.setDirty(true);
+		} else {		
+			if (box.getItems().size() == 1) {
+				return;
+			}
+			GuideManager.removeLoadedGuide(guideName.getText());
+			refreshItems();
+			setGuide(GuideManager.getLoadedGuides().get(box.getItems().get(0)));	
+			buttonResets();			
 		}
-		GuideManager.removeLoadedGuide(guideName.getText());
-		refreshItems();
-		setGuide(GuideManager.getLoadedGuides().get(box.getItems().get(0)));
+	}
+	
+	void onDeletePage() {
+		if (deletepb.getText().equalsIgnoreCase("delete page")) {			
+			deletepb.setText("Confirm?");
+			deletepb.setColor(redText);
+			deletepb.setDirty(true);
+		} else {		
+			Guide gguide = map.get(player);
+			gguide.deletePage(pageno);			
+			gguide.save();	
+			gguide.prepareForLoad();
+			pageUp();
+		}
 	}
 
 	void onCloseClick() {
@@ -314,11 +425,11 @@ public class GUIGuide extends GenericPopup {
 
 	}
 
-	void onSelect(int i, String text) {
+	void onSelect(int i, String text) {		
 		setGuide(GuideManager.getLoadedGuides().get(text));
 	}
-
-	private void refreshItems() {
+	
+	private void refreshItems() {		
 		List<String> items = new ArrayList<String>();
 		for (String gguide : GuideManager.getLoadedGuides().keySet()) {
 			if (player.hasPermission("infoguide.view." + gguide) || player.hasPermission("infoguide.view")) {
@@ -340,5 +451,50 @@ public class GUIGuide extends GenericPopup {
 		Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
 		box.setItems(items);
 		box.setDirty(true);
+	}
+
+	public void onEditClick() {
+		buttonResets();
+		if (!guideInvisible.isVisible()) { 
+			// Edit Name
+			guideName.setVisible(false);
+			guideInvisible.setVisible(true);
+			saveb.setVisible(false);
+			editb.setText("Save");	
+			editb.setDirty(true);
+		} else {
+			// Save Name
+			Guide gguide = map.get(player);
+			GuideManager.removeLoadedGuide(guideName.getText());
+			Bukkit.broadcastMessage(ChatColor.GOLD + player.getDisplayName() + ChatColor.YELLOW + " has renamed " + ChatColor.GOLD + guideName.getText() + ChatColor.YELLOW + " to " + ChatColor.GOLD + guideInvisible.getText());
+			gguide.setName(guideInvisible.getText());		
+			GuideManager.addGuide(gguide);
+			gguide.save();
+			refreshItems();
+			guide.prepareForLoad();
+			map.put(player, guide);
+			pagelabel.setText(Integer.toString(pageno));
+			guideField.setText(guide.getPage(pageno));
+			
+			guideName.setText(guideInvisible.getText());
+			guideName.setVisible(true);
+			guideInvisible.setVisible(false);
+			editb.setText("Edit");	
+			editb.setDirty(true);
+			saveb.setVisible(true);
+		}
+	}
+	
+	void buttonResets() {  // Resets modified buttons to their original states.
+		if (player.hasPermission("infoguide.delete") || player.hasPermission("infoguide.admin")) {
+			deleteb.setText("Delete");
+			deleteb.setColor(whiteText);
+			deleteb.setDirty(true);
+			
+			deletepb.setText("Delete Page");
+			deletepb.setColor(whiteText);
+			deletepb.setVisible(false);			
+			deletepb.setDirty(true);		
+		}
 	}
 }

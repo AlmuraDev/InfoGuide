@@ -134,6 +134,10 @@ public class Guide {
 		return date;
 	}
 
+	public void deletePage(int currentPage) {
+		pages.remove(pages.get(currentPage));
+	}
+	
 	public String getPage(int i) {
 		if (i == pages.size()) {
 			pages.add("");

@@ -34,7 +34,7 @@ public class DeleteButton extends GenericButton {
 
 	public DeleteButton(GUIGuide guide) {
 		super("Delete");
-		this.guide = guide;
+		this.guide = guide;		
 	}
 
 	@Override

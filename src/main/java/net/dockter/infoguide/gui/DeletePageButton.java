@@ -28,17 +28,17 @@ package net.dockter.infoguide.gui;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.gui.GenericButton;
 
-public class NewButton extends GenericButton {
+public class DeletePageButton extends GenericButton {
 
 	private GUIGuide guide;
 
-	public NewButton(GUIGuide guide) {
-		super("New");
-		this.guide = guide;			
+	public DeletePageButton(GUIGuide guide) {
+		super("Delete Page");
+		this.guide = guide;		
 	}
 
 	@Override
 	public void onButtonClick(ButtonClickEvent event) {
-		guide.onNewClick();
+		guide.onDeletePage();
 	}
 }

@@ -28,17 +28,17 @@ package net.dockter.infoguide.gui;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.gui.GenericButton;
 
-public class NewButton extends GenericButton {
+public class EditButton extends GenericButton {
 
 	private GUIGuide guide;
 
-	public NewButton(GUIGuide guide) {
-		super("New");
-		this.guide = guide;			
+	public EditButton(GUIGuide guide) {
+		super("Edit Name");
+		this.guide = guide;		
 	}
 
 	@Override
 	public void onButtonClick(ButtonClickEvent event) {
-		guide.onNewClick();
+		guide.onEditClick();
 	}
 }
