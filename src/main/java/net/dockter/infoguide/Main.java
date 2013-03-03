@@ -128,9 +128,7 @@ public class Main extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         Player player = null;
         if (cmd.getName().equalsIgnoreCase("infoguide")) {
-            if (player == null) {
-                sender.sendMessage("InfoGuide cannot be ran from the server console.");
-            } else {
+            if (sender instanceof Player) {
                 if (args.length == 0) {
                     ((SpoutPlayer) sender).getMainScreen().attachPopupScreen(new GUIGuide((SpoutPlayer) sender));
                     return true;
@@ -146,10 +144,11 @@ public class Main extends JavaPlugin {
                         ((SpoutPlayer) sender).getMainScreen().attachPopupScreen(guide);
                     } else {
                         player.sendMessage("Unable to open guide, did you spell it correctly?");
-                        System.out.println(GuideManager.getLoadedGuides().toString());
                     }
                     return true;
                 }
+            } else {
+                sender.sendMessage("InfoGuide cannot be ran from the server console.");
             }
         }
         return false;
