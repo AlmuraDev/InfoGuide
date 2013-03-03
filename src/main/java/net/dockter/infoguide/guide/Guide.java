@@ -195,4 +195,9 @@ public class Guide {
 	public void addPage() {
 		pages.add("");
 	}
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
