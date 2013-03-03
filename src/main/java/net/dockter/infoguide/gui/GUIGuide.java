@@ -425,7 +425,7 @@ public class GUIGuide extends GenericPopup {
 
 	}
 
-	void onSelect(int i, String text) {		
+	void onSelect(int i, String text) {
 		setGuide(GuideManager.getLoadedGuides().get(text));
 	}
 	

@@ -1,7 +1,7 @@
 name: InfoGuide
 main: net.dockter.infoguide.Main
 authors: [AlmuraDev]
-version: 2.0
+version: 2.4
 depend: [Spout]
 commands:
   gcme:
@@ -10,7 +10,6 @@ commands:
   infoguide:
     description: InfoGuide command.
     aliases: sguide
-    usage: /infoguide [player]
     permission: infoguide.view
     permissions-message: You don't have <permission>
   
