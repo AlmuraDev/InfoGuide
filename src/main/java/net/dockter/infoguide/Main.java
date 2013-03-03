@@ -125,8 +125,7 @@ public class Main extends JavaPlugin {
         }
     }
 
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        Player player = null;
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {        
         if (cmd.getName().equalsIgnoreCase("infoguide")) {
             if (sender instanceof Player) {
                 if (args.length == 0) {
@@ -143,7 +142,7 @@ public class Main extends JavaPlugin {
                         guide.setGuide(GuideManager.getLoadedGuides().get(arg.trim()));
                         ((SpoutPlayer) sender).getMainScreen().attachPopupScreen(guide);
                     } else {
-                        player.sendMessage("Unable to open guide, did you spell it correctly?");
+                        ((SpoutPlayer) sender).sendMessage("Unable to open guide, did you spell it correctly?");
                     }
                     return true;
                 }
