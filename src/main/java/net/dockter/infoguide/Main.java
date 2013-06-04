@@ -37,6 +37,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.keyboard.Keyboard;
 import org.getspout.spoutapi.player.SpoutPlayer;
+import org.mcstats.MetricsLite;
 
 import java.io.File;
 import java.io.IOException;
@@ -106,6 +107,11 @@ public class Main extends JavaPlugin {
         bypass = YamlConfiguration.loadConfiguration(file);
         hotkeys = config.getString("Hot_Key");
         SpoutManager.getKeyBindingManager().registerBinding("InfoGuide", Keyboard.valueOf(Main.hotkeys), "Opens InfoGuide", new InfoGuideInputHandler(), Main.getInstance());
+        try {
+            MetricsLite metrics = new MetricsLite(this);
+            metrics.start();
+        } catch (IOException e) {
+        }
     }
 
     public static boolean isBypassing(String name) {
